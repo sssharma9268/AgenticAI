@@ -1,0 +1,72 @@
+[tool.poetry]
+name = "app"
+version = "0.1.0"
+description = "An AI chat completion API using FastAPI"
+authors = ["Your Name <your.email@example.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.110.0"
+uvicorn = "^0.27.1"
+openai = "^1.12.0"
+python-dotenv = "^1.0.0"
+pydantic-settings = "^2.9.1"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.3.0"
+mypy = "^1.9.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "B", "UP", "PL"]
+
+[tool.mypy]
+python_version = "3.12"
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_return_any = true
+warn_unreachable = true
+strict_optional = true
+namespace_packages = false
+mypy_path = "."
+packages = ["app"]
+
+
+[tool.poetry.group.linting.dependencies]
+pre-commit = "^3.7.0"
+isort = "^6.0.1"
+
+[tool.pytest.ini_options]
+pythonpath = [
+    "app"
+]
+
+env_override_existing_values = 1
+env_files = "test/test.env"
+
+[tool.coverage.run]
+source = ["app"]
+relative_files = true
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+ensure_newline_before_comments = true
+known_first_party = ["app"]
+
+

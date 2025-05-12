@@ -1,0 +1,40 @@
+name: Deploy
+run-name: Deployment to ${{ github.event.inputs.deploy-environment }} with image tag ${{ github.event.inputs.image-tag }}
+on:
+  workflow_dispatch:
+    inputs:
+      deploy-environment:
+        required: true
+        default: "dev"
+      image-tag:
+        description: "The image tag to deploy"
+        required: true
+
+env:
+    IMAGE_TAG: ${{ inputs.image-tag }}
+    ENV: ${{ github.event.inputs.deploy-environment }}
+
+jobs:
+  deploy:
+    name: ${{ github.event.inputs.deploy-environment }} with image tag ${{ github.event.inputs.image-tag }}
+    environment: ${{ github.event.inputs.deploy-environment }}
+    runs-on: ubuntu-latest
+    defaults:
+        run:
+            shell: bash
+    container:
+        image: ghcr.io/docker/build-push-action:v4
+        credentials:
+            username: ${{ github.actor }}
+            password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+    - name: Get Manifest
+      uses: actions/checkout@v4
+    - name: "Deploy to ${{ github.event.inputs.deploy-environment }} cluster"
+      env:
+        IMAGE_TAG: ${{ env.IMAGE_TAG }}
+        ENV: ${{ env.ENV }}
+      run: |
+        kubectl apply -f manifest.yaml
+
+
